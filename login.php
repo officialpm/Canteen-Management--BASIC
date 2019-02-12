@@ -1,8 +1,37 @@
 <?php
    include("config.php");
    session_start();
-   
+   if(isset($_POST['admin']))
+   {
    if($_SERVER["REQUEST_METHOD"] == "POST") {
+      // username and password sent from form 
+      
+      $myusername = mysqli_real_escape_string($db,$_POST['username']);
+      $mypassword = mysqli_real_escape_string($db,$_POST['password']); 
+      
+      $sql = "SELECT username FROM admin WHERE username = '$myusername' and password = '$mypassword'";
+      $result = mysqli_query($db,$sql);
+      $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+      $active = $row['active'];
+      
+      $count = mysqli_num_rows($result);
+      if($count >= 1) {
+        $error = "Your Login Name or Password is valid";
+        
+        echo "<script type='text/javascript'>  window.location='welcome.php'; </script>";
+        // session_register("myusername");
+       //  $_SESSION['login_user'] = $myusername;
+        // header("location: welcome.html"); /* Redirect browser */
+     
+      }else {
+         $error = "Your Login Name or Password is invalid";
+      }
+   }
+   }
+
+if(isset($_POST['user']))
+{
+  if($_SERVER["REQUEST_METHOD"] == "POST") {
       // username and password sent from form 
       
       $myusername = mysqli_real_escape_string($db,$_POST['username']);
@@ -26,7 +55,7 @@
          $error = "Your Login Name or Password is invalid";
       }
    }
-      // If result matched $myusername and $mypassword, table row must be 1 row
+}// If result matched $myusername and $mypassword, table row must be 1 row
 		
       
 ?>
@@ -63,8 +92,8 @@
                <form action = "" method = "post">
                   <label>UserName  :</label><input type = "text" name = "username" class = "box"/><br /><br />
                   <label>Password  :</label><input type = "password" name = "password" class = "box" /><br/><br />
-                    <input type="radio" name="user" value="admin">Admin<br>
-  <input type="radio" name="user" value="user">User<br>
+                    <input type="radio" name="admin" value="admin">Admin<br>
+  <input type="radio" name="user" value="user" >User<br>
                   <input type = "submit" value = " Submit "/><br />
                </form>
                
